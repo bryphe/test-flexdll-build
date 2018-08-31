@@ -1,0 +1,19 @@
+platform:
+    - x64
+
+install:
+    # The x64 is required as a workaround for esy/esy#412
+    - ps: Install-Product node 8 x64
+    - npm install -g esy-bash@0.1.20
+    - esy-bash mkdir -p /cygdrive/c/projects/ocaml-prefix
+    - git clone https://github.com/esy-ocaml/ocaml
+    - cd ocaml
+    - git checkout 4.6.0+esy
+
+build_script:
+    - esy-bash ./esy-configure -no-cfi -prefix C:/projects/ocaml-prefix
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+test: off
